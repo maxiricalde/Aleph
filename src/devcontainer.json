@@ -1,0 +1,19 @@
+{
+	"name": "Entorno C Flex Bison",
+	"build": {
+		// Le dice que el Dockerfile está un nivel arriba (en la raíz)
+		"dockerfile": "../Dockerfile",
+		// Esto establece la carpeta de trabajo por defecto
+		"context": ".."
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				// Instala automáticamente la extensión de C/C++ de Microsoft dentro del Linux
+				"ms-vscode.cpptools"
+			]
+		}
+	},
+	// Usuario por defecto (root está bien para practicas de uni, evita problemas de permisos)
+	"remoteUser": "root"
+}

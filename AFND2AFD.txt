@@ -1,0 +1,50 @@
+def afndTOafd(AFND){
+    Q_afnd, S, delta_afnd, q0_afnd, F_afnd = /get AFND[0], /get AFND[1], /get AFND[2], /get AFND[3], /get AFND[4];
+    Q_afd = {}; 
+    delta_afd = [];
+    q0_afd = {q0_afnd}; 
+    F_afd = {}; 
+    cola_estados = []; 
+    q0_afd /add Q_afd;
+    q0_afd /push cola_estados;
+
+    while(/size cola_estados > 0 ){
+        estado_actual = /pop cola_estados;
+        foreach simbolo in S {
+            nuevo_estado = {};
+            foreach transicion_afnd in delta_afnd {
+                estado_origen = /get transicion_afnd[0];
+                simbolo_transicion = /get transicion_afnd[1];
+                estados_destino = /get transicion_afnd[2];
+                if ((estado_origen /in estado_actual) && (simbolo_transicion == simbolo)){
+                     nuevo_estado = nuevo_estado /U estados_destino;
+                };
+            };
+                transicion_nueva = [estado_actual, simbolo, nuevo_estado];
+                transicion_nueva /add delta_afd;
+                if(!(nuevo_estado /in Q_afd)){
+                    nuevo_estado /add Q_afd;
+                    nuevo_estado /push cola_estados;
+                };
+        };
+    };
+     foreach estado_afd in Q_afd {
+        interseccion_resultado = estado_afd /I F_afnd;
+        if(/size(interseccion_resultado) > 0){
+             estado_afd /add F_afd;
+        };
+    };
+    AFD = [Q_afd, S, delta_afd, q0_afd, F_afd];
+    return AFD;
+};
+
+
+AF=[{"q0","q1","q2"},{"a","b"},[["q0", "a", {"q0", "q1"}], ["q0", "b", {}], ["q1", "b", {"q2"}], ["q1", "a", {}], ["q2", "a", {}], ["q2", "b", {}]], "q0", {"q2"}];
+
+AFD=afndTOafd(AF);
+Qb, Sb, deltab, q0b, Fb = /get AFD[0], /get AFD[1], /get AFD[2], /get AFD[3], /get AFD[4];
+/print(Qb);
+/print(Sb);
+/print(deltab);
+/print(q0b);
+/print(Fb);

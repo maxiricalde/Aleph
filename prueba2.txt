@@ -1,0 +1,9 @@
+A=[1,2,3,4];
+a=20;
+foreach a in A{
+    /print(a);
+    5 /push A;
+};
+
+
+

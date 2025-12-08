@@ -1,0 +1,23 @@
+def busqueda_binaria(lista, elemento, inicio, fin){
+    if(inicio > fin){
+        return "01"; 
+    };
+    medio = (inicio + fin) / 2;
+    if(/get lista[medio] == elemento){
+        return medio; 
+    } else {
+        if(/get lista[medio] > elemento){
+            return busqueda_binaria(lista, elemento, inicio, medio - 1);
+        } else {
+            return busqueda_binaria(lista, elemento, medio + 1, fin);
+        };
+    };
+};
+
+def suma(x,y){
+    return x+y;
+};
+
+A=[1,2,3,4,5];
+b={suma(1,1),busqueda_binaria(A,suma(1,0),0,4)};
+/print(b);
