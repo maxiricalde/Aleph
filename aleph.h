@@ -76,7 +76,7 @@ struct ufncall {                /* user function */
   struct symbol *nom;
   char* namechar;
  };
- 
+
 struct ast{ //estructura de arbol sintactico abstracto, que te dice el tipo de dato nodo y te apunta a su rama izq y der
     int nodeType;
     struct ast *izq;

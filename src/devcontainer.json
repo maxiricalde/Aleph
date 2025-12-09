@@ -9,8 +9,10 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
+				"daohong-emilio.yash",
 				// Instala automáticamente la extensión de C/C++ de Microsoft dentro del Linux
 				"ms-vscode.cpptools"
+
 			]
 		}
 	},

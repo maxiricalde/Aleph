@@ -53,7 +53,7 @@ struct ast* newBool(int val) {
     return (struct ast*)a;
 }
 
-struct ast* newref(char* sym){
+struct ast* newref(char* sym){   //no le asigna un espacio en tabla de simbolos
     struct symref* a=malloc(sizeof(struct  symref));
     if(!a){
         yyerror("out ofspace");

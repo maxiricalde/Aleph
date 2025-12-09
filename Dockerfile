@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     gdb \
     git \
+    valgrind \
+    nano \
     && rm -rf /var/lib/apt/lists/*
 
 # Establecemos el directorio de trabajo dentro del contenedor
