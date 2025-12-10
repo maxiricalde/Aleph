@@ -231,7 +231,7 @@ tData eval_calluser(char*sp, tData actual_args) {
         }else
             s->valor=newNodo(1);
     } else {
-        result = newNodo(T_ELEM);
+        result = newNodo(T_ELEM);  //sirve?
     }
     // 4. Salir del ámbito de la función.
     exit_scope();
