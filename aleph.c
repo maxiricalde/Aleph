@@ -773,10 +773,12 @@ tData eval( struct ast* a){
 
 void freeast(struct ast *a){
     switch(a->nodeType){
-        case T_ELEM
-        
+        case T_ELEM:
+            dataFree(a);
+        break;    
     }
     }
+
 
 /*FUNCION QUE HACE HASHING
 unsigned symhash(char *sym){

@@ -77,8 +77,73 @@ tData newData(char *s){ /**LISTO*/
 }
 
 
+void dataFree(tData* d) {
+    if (d == NULL || *d == NULL) return;
 
-void dataFree(tData* d){ //revisarrr  
+    tData current = *d;
+    tData nextNode;
+
+    while (current != NULL) {
+        nextNode = current->next;
+        switch (current->nodeType) {
+            case T_ELEM:
+                if (current->atom != NULL) {
+                    free(current->atom);
+                    current->atom = NULL; // Buena práctica defensiva
+                }
+                break;
+
+            case T_LIST:
+            case T_SET:
+                // Aquí sí usamos recursión, pero solo hacia abajo (profundidad)
+                // No hacia la derecha (longitud), eso lo maneja el while.
+                if (current->data != NULL) {
+                    dataFree(&(current->data)); 
+                }
+                break;
+            
+            // T_INT y T_BOOL no necesitan liberar campos internos, 
+            // solo el nodo en sí (que se hace abajo).
+        }
+
+        // Liberar el nodo actual
+        free(current);
+        
+        // Avanzar al siguiente nodo de la lista "spine"
+        // Nota: Solo T_LIST y T_SET suelen usar 'next' para encadenar elementos.
+        // Si T_ELEM/INT/BOOL son atómicos y no parte de una lista enlazada pura, 
+        // nextNode será NULL.
+        current = nextNode;
+    }
+
+    // Importante: Anular el puntero original del llamador
+    *d = NULL;
+}
+void dataFree(tData* d){
+	if(*d==NULL || d == NULL) return;
+	tData actual= *d;
+	tData sig;
+	while (actual != NULL) {
+		sig = actual->next;
+		switch(actual->nodeType){
+			case T_ELEM:
+				free(actual->atom);
+			break;
+			case T_LIST:
+				dataFree(&actual->data);
+			break;
+			case T_SET:
+				dataFree(&actual->data);
+			break;
+			
+		}
+		free(actual);
+		actual = sig;
+	}
+	*d= NULL;
+}
+
+/*void dataFree(tData* d){ //revisarrr  
 	if(d != NULL){
 		if(((*d)->nodeType == T_ELEM)){
 			free((*d)->data);
@@ -96,7 +161,7 @@ void dataFree(tData* d){ //revisarrr
 	}
 	free(*d);
 	*d= NULL;
-}
+}*/
 
 	
 
