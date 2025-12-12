@@ -51,7 +51,7 @@ program:  {
           } 
 |body    {rta=eval($1); print_symbol_tables();
         freeast($1);
-               /* if(rta){
+          /* if(rta){
                         printf("\n>>"); 
                         printData(rta);     
                 }
@@ -172,6 +172,7 @@ if(argc<2){ // leemos de stdin
         printf("aleph");
         
         yyparse();
+        exit_scope();
         return 0; //corto aca
 }
 for(int i=1; i<argc;i++){
@@ -184,8 +185,10 @@ for(int i=1; i<argc;i++){
         printf("aleph");
         printf(">");
         enter_scope();
-        while(!feof(yyin))
+        while(!feof(yyin)){
            yyparse();
+        }
+        exit_scope();
         fclose(f);    
 }
 return 0;

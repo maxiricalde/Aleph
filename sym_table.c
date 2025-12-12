@@ -70,6 +70,26 @@ void exit_scope() {
     }
     ScopeNode* temp = scope_stack_top;             // Guarda el nodo actual
     scope_stack_top = scope_stack_top->next;       // Mueve la cima de la pila al siguiente nodo
+    for (int i = 0; i < NHASH; i++) {
+        struct symbol* s = &temp->ptr_table->table[i];
+        if (s->nom != NULL) {
+           free(s->nom);
+           s->nom = NULL;
+        }
+        if (s->valor != NULL) {
+            dataFree(&s->valor); 
+            s->valor = NULL;
+         }
+        if (s->func_body != NULL) {
+            freeast(s->func_body);
+            s->func_body = NULL;
+        }
+         if (s->param_list != NULL) {
+        freeast(s->param_list);
+        s->param_list = NULL;
+        }
+    }
+    
     
     // Libera la memoria de la tabla de símbolos
     // NOTA: Si tus símbolos contienen campos que son punteros (como `nom`),
@@ -77,6 +97,7 @@ void exit_scope() {
     free(temp->ptr_table);
     free(temp);
 }
+
 
 // Función para agregar un símbolo SOLO al ámbito actual (la tabla en la cima de la pila)
 // Esta función reemplazará la funcionalidad de 'agregar' que tenía tu lookupp original.

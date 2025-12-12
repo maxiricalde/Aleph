@@ -384,31 +384,39 @@ int comparar(int tipo, struct ast* izq,struct ast* der){
     }
 
 tData eval( struct ast* a){
-    tData nodo=malloc(sizeof(struct dataType));
+    //tData nodo=malloc(sizeof(struct dataType));
+    tData nodo=NULL;
+    tData aux1,aux2;
     if(RETURN_STATE!=1){        
-    tData aux2=inicializar();
-    tData aux1=inicializar();
+  //  tData aux2=inicializar();
+    //tData aux1=inicializar();
     if(!a){
         yyerror("memoria mal asignada");
         return 0;
     }
-   nodo=inicializar();
    int r;
         switch (a->nodeType){
           
             case T_ELEM:
+                nodo=inicializar();
                 nodo->nodeType=T_ELEM;
-                nodo=(tData)a;
+                nodo->atom = strdup(((tData)a)->atom);
+              //  nodo=(tData)a;
             break;
             case T_INT:
+                nodo=inicializar();
                 nodo->nodeType=T_INT;
-                nodo = (tData)a;
+                nodo->ivalor = ((tData)a)->ivalor;
+                //nodo = (tData)a;
             break;
             case T_BOOL:
+                nodo=inicializar();
                 nodo->nodeType=T_BOOL;
-                nodo = (tData)a;
+                nodo->bool = ((tData)a)->bool;
+                //nodo = (tData)a;
             break;
             case T_LIST:
+                nodo=inicializar();
                 tipoRaiz=T_LIST;
                 nodo->nodeType=tipoRaiz;
                if(a->izq==NULL && a->der==NULL){
@@ -420,6 +428,7 @@ tData eval( struct ast* a){
                 }
             break;
             case T_SET:
+                nodo=inicializar();
                 tipoRaiz =T_SET;
                 nodo->nodeType=tipoRaiz;
                 if(a->izq==NULL && a->der==NULL){
@@ -558,6 +567,7 @@ tData eval( struct ast* a){
             break;
              }
              case '+':
+             nodo=inicializar();
              nodo->nodeType=T_INT;
              aux1=eval(a->izq);
              aux2=eval(a->der);
@@ -565,18 +575,21 @@ tData eval( struct ast* a){
                nodo->ivalor=(aux1->ivalor + aux2->ivalor); break;
             
             case '-':
+             nodo=inicializar();
              nodo->nodeType=T_INT;
              aux1=eval(a->izq);
              aux2=eval(a->der);
              if(aux1->nodeType==T_INT && aux2->nodeType==T_INT)
                nodo->ivalor=(aux1->ivalor - aux2->ivalor); break;
             case '*':
+            nodo=inicializar();
              nodo->nodeType=T_INT;
              aux1=eval(a->izq);
              aux2=eval(a->der);
              if(aux1->nodeType==T_INT && aux2->nodeType==T_INT)
                nodo->ivalor=(aux1->ivalor * aux2->ivalor); break;
             case '/': 
+            nodo=inicializar();
             nodo->nodeType=T_INT;
             aux1=eval(a->izq);
              aux2=eval(a->der);
