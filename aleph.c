@@ -780,8 +780,8 @@ tData eval( struct ast* a){
             break;
         
         }
-    freeast(aux1);
-    freeast(aux2);
+    freeast(&aux1);
+    freeast(&aux2);
     return nodo;
     }
     return RETURN_VAL;
