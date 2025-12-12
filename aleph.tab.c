@@ -560,13 +560,13 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    49,    49,    52,    64,    65,    66,    69,    70,    71,
-      72,    73,    74,    75,    76,    83,    86,    87,    89,    91,
-      93,    94,    96,    97,   102,   103,   105,   106,   107,   108,
-     109,   110,   111,   112,   113,   114,   115,   116,   117,   118,
-     119,   120,   121,   122,   123,   124,   125,   126,   127,   128,
-     129,   131,   132,   133,   134,   135,   136,   137,   138,   140,
-     141,   142,   145,   146,   148,   149
+       0,    49,    49,    52,    66,    67,    68,    71,    72,    73,
+      74,    75,    76,    77,    78,    85,    88,    89,    91,    93,
+      95,    96,    98,    99,   104,   105,   107,   108,   109,   110,
+     111,   112,   113,   114,   115,   116,   117,   118,   119,   120,
+     121,   122,   123,   124,   125,   126,   127,   128,   129,   130,
+     131,   133,   134,   135,   136,   137,   138,   139,   140,   142,
+     143,   144,   147,   148,   150,   151
 };
 #endif
 
@@ -1345,6 +1345,7 @@ yyreduce:
   case 3: /* program: body  */
 #line 52 "aleph.y"
          {rta=eval((yyvsp[0].t)); print_symbol_tables();
+        freeast((yyvsp[0].t));
                /* if(rta){
                         printf("\n>>"); 
                         printData(rta);     
@@ -1353,337 +1354,338 @@ yyreduce:
                 //treefree($2);
                 //freeAST($2);
                 dataFree(&rta);*/
+        
                 }
-#line 1358 "aleph.tab.c"
+#line 1360 "aleph.tab.c"
     break;
 
   case 4: /* body: stmt eol body  */
-#line 64 "aleph.y"
+#line 66 "aleph.y"
                     {(yyval.t)=newast(LIST_STMT,(yyvsp[-2].t),(yyvsp[0].t));}
-#line 1364 "aleph.tab.c"
+#line 1366 "aleph.tab.c"
     break;
 
   case 5: /* body: stmt eol  */
-#line 65 "aleph.y"
+#line 67 "aleph.y"
                {(yyval.t)=newast(LIST_STMT,(yyvsp[-1].t),NULL);}
-#line 1370 "aleph.tab.c"
+#line 1372 "aleph.tab.c"
     break;
 
   case 8: /* stmt: RETURN expr  */
-#line 70 "aleph.y"
+#line 72 "aleph.y"
                              {(yyval.t)=newast(T_RETURN,(yyvsp[0].t),NULL);}
-#line 1376 "aleph.tab.c"
+#line 1378 "aleph.tab.c"
     break;
 
   case 9: /* stmt: PRINT OPENPAR expr CLOSEPAR  */
-#line 71 "aleph.y"
+#line 73 "aleph.y"
                              {(yyval.t)=newast(T_PRINT,(yyvsp[-1].t),NULL);}
-#line 1382 "aleph.tab.c"
+#line 1384 "aleph.tab.c"
     break;
 
   case 14: /* stmt: DEF IDEN OPENPAR symlist CLOSEPAR OPENLL lista_stmt CLOSELL  */
-#line 76 "aleph.y"
+#line 78 "aleph.y"
                                                              {(yyval.t)=dodef(add_symbol_to_current_scope((yyvsp[-6].c)),(yyvsp[-4].t),(yyvsp[-1].t));
                                                                 printf("\nDefinida>");}
-#line 1389 "aleph.tab.c"
+#line 1391 "aleph.tab.c"
     break;
 
   case 15: /* asig_mult: symlist ASSIGN lista_expr  */
-#line 83 "aleph.y"
+#line 85 "aleph.y"
                                      {(yyval.t)=newast(T_ASIGN,(yyvsp[-2].t),(yyvsp[0].t));}
-#line 1395 "aleph.tab.c"
+#line 1397 "aleph.tab.c"
     break;
 
   case 16: /* if: IF OPENPAR expr CLOSEPAR OPENLL lista_stmt CLOSELL  */
-#line 86 "aleph.y"
+#line 88 "aleph.y"
                                                        { (yyval.t) = newFlow(T_IF, (yyvsp[-4].t), (yyvsp[-1].t), NULL); }
-#line 1401 "aleph.tab.c"
+#line 1403 "aleph.tab.c"
     break;
 
   case 17: /* if: IF OPENPAR expr CLOSEPAR OPENLL lista_stmt CLOSELL ELSE OPENLL lista_stmt CLOSELL  */
-#line 87 "aleph.y"
+#line 89 "aleph.y"
                                                                                    { (yyval.t) = newFlow(T_IF, (yyvsp[-8].t), (yyvsp[-5].t),(yyvsp[-1].t) ); }
-#line 1407 "aleph.tab.c"
+#line 1409 "aleph.tab.c"
     break;
 
   case 18: /* while: WHILE OPENPAR expr CLOSEPAR OPENLL lista_stmt CLOSELL  */
-#line 89 "aleph.y"
+#line 91 "aleph.y"
                                                               { (yyval.t) = newFlow(T_WH, (yyvsp[-4].t), (yyvsp[-1].t), NULL); }
-#line 1413 "aleph.tab.c"
+#line 1415 "aleph.tab.c"
     break;
 
   case 19: /* for_each: FOREACH IDEN OP_IN expr OPENLL lista_stmt CLOSELL  */
-#line 91 "aleph.y"
+#line 93 "aleph.y"
                                                            {(yyval.t)=newForeach(T_FOREACH,newref((yyvsp[-5].c)),(yyvsp[-3].t),(yyvsp[-1].t));}
-#line 1419 "aleph.tab.c"
+#line 1421 "aleph.tab.c"
     break;
 
   case 20: /* lista_stmt: stmt SEMI lista_stmt  */
-#line 93 "aleph.y"
+#line 95 "aleph.y"
                                        {(yyval.t)=newast(LIST_STMT,(yyvsp[-2].t),(yyvsp[0].t));}
-#line 1425 "aleph.tab.c"
+#line 1427 "aleph.tab.c"
     break;
 
   case 21: /* lista_stmt: stmt SEMI  */
-#line 94 "aleph.y"
+#line 96 "aleph.y"
                                            {(yyval.t)=newast(LIST_STMT,(yyvsp[-1].t),NULL);}
-#line 1431 "aleph.tab.c"
+#line 1433 "aleph.tab.c"
     break;
 
   case 22: /* lista_expr: expr COMMA lista_expr  */
-#line 96 "aleph.y"
+#line 98 "aleph.y"
                                         {(yyval.t)=newast(LIST_EXPR,(yyvsp[-2].t),(yyvsp[0].t));}
-#line 1437 "aleph.tab.c"
+#line 1439 "aleph.tab.c"
     break;
 
   case 23: /* lista_expr: expr  */
-#line 97 "aleph.y"
+#line 99 "aleph.y"
                                         {(yyval.t)=newast(LIST_EXPR,(yyvsp[0].t),NULL);}
-#line 1443 "aleph.tab.c"
+#line 1445 "aleph.tab.c"
     break;
 
   case 24: /* symlist: IDEN COMMA symlist  */
-#line 102 "aleph.y"
+#line 104 "aleph.y"
                                         {(yyval.t)=newNOML(LIST_ID,(yyvsp[-2].c),(struct nomlist*)(yyvsp[0].t));}
-#line 1449 "aleph.tab.c"
+#line 1451 "aleph.tab.c"
     break;
 
   case 25: /* symlist: IDEN  */
-#line 103 "aleph.y"
+#line 105 "aleph.y"
                                         {(yyval.t)=newNOML(LIST_ID,(yyvsp[0].c),NULL);}
-#line 1455 "aleph.tab.c"
+#line 1457 "aleph.tab.c"
     break;
 
   case 26: /* expr: ELEM  */
-#line 105 "aleph.y"
+#line 107 "aleph.y"
                         {(yyval.t)=newElem((yyvsp[0].c));}
-#line 1461 "aleph.tab.c"
+#line 1463 "aleph.tab.c"
     break;
 
   case 27: /* expr: IDEN  */
-#line 106 "aleph.y"
+#line 108 "aleph.y"
                         {(yyval.t)=newref((yyvsp[0].c));}
-#line 1467 "aleph.tab.c"
+#line 1469 "aleph.tab.c"
     break;
 
   case 28: /* expr: NUMBER  */
-#line 107 "aleph.y"
+#line 109 "aleph.y"
                         {(yyval.t)=newInt((yyvsp[0].i));}
-#line 1473 "aleph.tab.c"
+#line 1475 "aleph.tab.c"
     break;
 
   case 29: /* expr: BOOL_F  */
-#line 108 "aleph.y"
+#line 110 "aleph.y"
                         {(yyval.t)=newBool(0);}
-#line 1479 "aleph.tab.c"
+#line 1481 "aleph.tab.c"
     break;
 
   case 30: /* expr: BOOL_T  */
-#line 109 "aleph.y"
+#line 111 "aleph.y"
                         {(yyval.t)=newBool(1);}
-#line 1485 "aleph.tab.c"
+#line 1487 "aleph.tab.c"
     break;
 
   case 31: /* expr: expr OP_UNION expr  */
-#line 110 "aleph.y"
+#line 112 "aleph.y"
                         {(yyval.t)=newast(T_UNION,(yyvsp[-2].t),(yyvsp[0].t));}
-#line 1491 "aleph.tab.c"
+#line 1493 "aleph.tab.c"
     break;
 
   case 32: /* expr: expr OP_INTER expr  */
-#line 111 "aleph.y"
+#line 113 "aleph.y"
                         {(yyval.t)=newast(T_INTER,(yyvsp[-2].t),(yyvsp[0].t));}
-#line 1497 "aleph.tab.c"
+#line 1499 "aleph.tab.c"
     break;
 
   case 33: /* expr: expr OP_DIFF expr  */
-#line 112 "aleph.y"
+#line 114 "aleph.y"
                         {(yyval.t)=newast(T_DIFF,(yyvsp[-2].t),(yyvsp[0].t));}
-#line 1503 "aleph.tab.c"
+#line 1505 "aleph.tab.c"
     break;
 
   case 34: /* expr: OPENPAR expr CLOSEPAR  */
-#line 113 "aleph.y"
+#line 115 "aleph.y"
                            {(yyval.t)=(yyvsp[-1].t);}
-#line 1509 "aleph.tab.c"
+#line 1511 "aleph.tab.c"
     break;
 
   case 35: /* expr: OP_FIRST expr  */
-#line 114 "aleph.y"
+#line 116 "aleph.y"
                     {(yyval.t)=newast(T_FIRST,(yyvsp[0].t),NULL);}
-#line 1515 "aleph.tab.c"
+#line 1517 "aleph.tab.c"
     break;
 
   case 36: /* expr: OP_LAST expr  */
-#line 115 "aleph.y"
+#line 117 "aleph.y"
                    {(yyval.t)=newast(T_LAST,(yyvsp[0].t),NULL);}
-#line 1521 "aleph.tab.c"
+#line 1523 "aleph.tab.c"
     break;
 
   case 37: /* expr: expr OP_ADD expr  */
-#line 116 "aleph.y"
+#line 118 "aleph.y"
                        {(yyval.t)=newast(T_ADD,(yyvsp[-2].t),(yyvsp[0].t));}
-#line 1527 "aleph.tab.c"
+#line 1529 "aleph.tab.c"
     break;
 
   case 40: /* expr: expr '+' expr  */
-#line 119 "aleph.y"
+#line 121 "aleph.y"
                              { (yyval.t) = newast('+', (yyvsp[-2].t),(yyvsp[0].t)); }
-#line 1533 "aleph.tab.c"
+#line 1535 "aleph.tab.c"
     break;
 
   case 41: /* expr: expr '-' expr  */
-#line 120 "aleph.y"
+#line 122 "aleph.y"
                              { (yyval.t) = newast('-', (yyvsp[-2].t),(yyvsp[0].t));}
-#line 1539 "aleph.tab.c"
+#line 1541 "aleph.tab.c"
     break;
 
   case 42: /* expr: expr '*' expr  */
-#line 121 "aleph.y"
+#line 123 "aleph.y"
                              { (yyval.t) = newast('*', (yyvsp[-2].t),(yyvsp[0].t)); }
-#line 1545 "aleph.tab.c"
+#line 1547 "aleph.tab.c"
     break;
 
   case 43: /* expr: expr '/' expr  */
-#line 122 "aleph.y"
+#line 124 "aleph.y"
                              { (yyval.t) = newast('/', (yyvsp[-2].t),(yyvsp[0].t)); }
-#line 1551 "aleph.tab.c"
+#line 1553 "aleph.tab.c"
     break;
 
   case 44: /* expr: expr_relacionales  */
-#line 123 "aleph.y"
+#line 125 "aleph.y"
                        {(yyval.t)=(yyvsp[0].t);}
-#line 1557 "aleph.tab.c"
+#line 1559 "aleph.tab.c"
     break;
 
   case 45: /* expr: expr_log  */
-#line 124 "aleph.y"
+#line 126 "aleph.y"
               {(yyval.t)=(yyvsp[0].t);}
-#line 1563 "aleph.tab.c"
+#line 1565 "aleph.tab.c"
     break;
 
   case 46: /* expr: OP_SIZE expr  */
-#line 125 "aleph.y"
+#line 127 "aleph.y"
                   {(yyval.t)=newast(T_SIZE,(yyvsp[0].t),NULL);}
-#line 1569 "aleph.tab.c"
+#line 1571 "aleph.tab.c"
     break;
 
   case 47: /* expr: OP_GET expr OPENCOR expr CLOSECOR  */
-#line 126 "aleph.y"
+#line 128 "aleph.y"
                                         {(yyval.t)=newast(T_GET,(yyvsp[-3].t),(yyvsp[-1].t));}
-#line 1575 "aleph.tab.c"
+#line 1577 "aleph.tab.c"
     break;
 
   case 48: /* expr: OP_POP expr  */
-#line 127 "aleph.y"
+#line 129 "aleph.y"
                   {(yyval.t)=newast(T_POP,(yyvsp[0].t),NULL);}
-#line 1581 "aleph.tab.c"
+#line 1583 "aleph.tab.c"
     break;
 
   case 49: /* expr: expr OP_PUSH expr  */
-#line 128 "aleph.y"
+#line 130 "aleph.y"
                        {(yyval.t)=newast(T_PUSH,(yyvsp[-2].t),(yyvsp[0].t));}
-#line 1587 "aleph.tab.c"
+#line 1589 "aleph.tab.c"
     break;
 
   case 50: /* expr: IDEN OPENPAR lista_expr CLOSEPAR  */
-#line 129 "aleph.y"
+#line 131 "aleph.y"
                                       {(yyval.t)=newcall((yyvsp[-3].c),(yyvsp[-1].t));}
-#line 1593 "aleph.tab.c"
+#line 1595 "aleph.tab.c"
     break;
 
   case 51: /* expr_relacionales: expr EQ expr  */
-#line 131 "aleph.y"
+#line 133 "aleph.y"
                                      {(yyval.t) = newast(T_EQ, (yyvsp[-2].t), (yyvsp[0].t));}
-#line 1599 "aleph.tab.c"
+#line 1601 "aleph.tab.c"
     break;
 
   case 52: /* expr_relacionales: expr NEQ expr  */
-#line 132 "aleph.y"
+#line 134 "aleph.y"
                                      {(yyval.t) = newast(T_NEQ, (yyvsp[-2].t), (yyvsp[0].t));}
-#line 1605 "aleph.tab.c"
+#line 1607 "aleph.tab.c"
     break;
 
   case 53: /* expr_relacionales: expr MY expr  */
-#line 133 "aleph.y"
+#line 135 "aleph.y"
                                      {(yyval.t) = newast(T_MY, (yyvsp[-2].t), (yyvsp[0].t));}
-#line 1611 "aleph.tab.c"
+#line 1613 "aleph.tab.c"
     break;
 
   case 54: /* expr_relacionales: expr MN expr  */
-#line 134 "aleph.y"
+#line 136 "aleph.y"
                                      {(yyval.t) = newast(T_MN, (yyvsp[-2].t), (yyvsp[0].t));}
-#line 1617 "aleph.tab.c"
+#line 1619 "aleph.tab.c"
     break;
 
   case 55: /* expr_relacionales: expr MYEQ expr  */
-#line 135 "aleph.y"
+#line 137 "aleph.y"
                                      {(yyval.t) = newast(T_MYEQ, (yyvsp[-2].t), (yyvsp[0].t));}
-#line 1623 "aleph.tab.c"
+#line 1625 "aleph.tab.c"
     break;
 
   case 56: /* expr_relacionales: expr MNEQ expr  */
-#line 136 "aleph.y"
+#line 138 "aleph.y"
                                      {(yyval.t) = newast(T_MNEQ, (yyvsp[-2].t), (yyvsp[0].t));}
-#line 1629 "aleph.tab.c"
+#line 1631 "aleph.tab.c"
     break;
 
   case 57: /* expr_relacionales: expr BELONG expr  */
-#line 137 "aleph.y"
+#line 139 "aleph.y"
                                      {(yyval.t) = newast(T_BE, (yyvsp[-2].t), (yyvsp[0].t));}
-#line 1635 "aleph.tab.c"
+#line 1637 "aleph.tab.c"
     break;
 
   case 58: /* expr_relacionales: expr SUBSET expr  */
-#line 138 "aleph.y"
+#line 140 "aleph.y"
                                      {(yyval.t) = newast(T_SUBSET, (yyvsp[-2].t), (yyvsp[0].t));}
-#line 1641 "aleph.tab.c"
+#line 1643 "aleph.tab.c"
     break;
 
   case 59: /* expr_log: expr B_AND expr  */
-#line 140 "aleph.y"
+#line 142 "aleph.y"
                           {(yyval.t) = newast(T_AND, (yyvsp[-2].t), (yyvsp[0].t));}
-#line 1647 "aleph.tab.c"
+#line 1649 "aleph.tab.c"
     break;
 
   case 60: /* expr_log: B_NOT expr  */
-#line 141 "aleph.y"
+#line 143 "aleph.y"
                     {(yyval.t) = newast(T_NOT,(yyvsp[0].t),NULL);}
-#line 1653 "aleph.tab.c"
+#line 1655 "aleph.tab.c"
     break;
 
   case 61: /* expr_log: expr B_OR expr  */
-#line 142 "aleph.y"
+#line 144 "aleph.y"
                         {(yyval.t) = newast(T_OR, (yyvsp[-2].t), (yyvsp[0].t));}
-#line 1659 "aleph.tab.c"
+#line 1661 "aleph.tab.c"
     break;
 
   case 62: /* set: OPENLL lista_expr CLOSELL  */
-#line 145 "aleph.y"
+#line 147 "aleph.y"
                                {(yyval.t)=newast(T_SET,(yyvsp[-1].t),NULL);}
-#line 1665 "aleph.tab.c"
+#line 1667 "aleph.tab.c"
     break;
 
   case 63: /* set: OPENLL CLOSELL  */
-#line 146 "aleph.y"
+#line 148 "aleph.y"
                  {(yyval.t)=newast(T_SET,NULL,NULL);}
-#line 1671 "aleph.tab.c"
+#line 1673 "aleph.tab.c"
     break;
 
   case 64: /* list: OPENCOR lista_expr CLOSECOR  */
-#line 148 "aleph.y"
+#line 150 "aleph.y"
                                   {(yyval.t)=newast(T_LIST,(yyvsp[-1].t),NULL);}
-#line 1677 "aleph.tab.c"
+#line 1679 "aleph.tab.c"
     break;
 
   case 65: /* list: OPENCOR CLOSECOR  */
-#line 149 "aleph.y"
+#line 151 "aleph.y"
                     {(yyval.t)=newast(T_LIST,NULL,NULL);}
-#line 1683 "aleph.tab.c"
+#line 1685 "aleph.tab.c"
     break;
 
 
-#line 1687 "aleph.tab.c"
+#line 1689 "aleph.tab.c"
 
       default: break;
     }
@@ -1877,7 +1879,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 166 "aleph.y"
+#line 168 "aleph.y"
 
 
 int main(int argc, char** argv) {

@@ -127,6 +127,7 @@ struct ast *newNOML(int nodeType,char *sym, struct nomlist *next);
 struct ast* dodef(struct symbol *name, struct ast *params, struct ast *stmts);
 struct ast *newcall(char *s, struct ast *l); //crea una llamada;
 tData eval( struct ast* a);
+void freeast(struct ast *a);
 struct symbol* lookupp(char* );
 
 void printref(struct symref *s);

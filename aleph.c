@@ -258,7 +258,7 @@ struct ast *newNOML(int nodeType,char *sym, struct nomlist *next){
     yyerror("out of space");
     exit(0);
     }
-    noml->nodeType=nodeType;
+    noml->nodeType=nodeType; //T_NOMLIST
     noml->nom_sym = sym;
     noml->next = next;
   return (struct ast*)noml;
@@ -772,12 +772,69 @@ tData eval( struct ast* a){
 }
 
 void freeast(struct ast *a){
+    if(!a) return;
     switch(a->nodeType){
+        case LIST_STMT:
+            freeast(a->izq);
+            freeast(a->der);
+        break;
+        case LIST_EXPR:
+            freeast(a->izq);
+            freeast(a->der);
+        break;
         case T_ELEM:
-            dataFree(a);
-        break;    
+            if (((tData)a)->atom != NULL) {
+                free(((tData)a)->atom);
+            }
+        break;
+        case T_INT:
+        case T_BOOL:
+        break;
+        case T_RETURN:
+            freeast(a->izq);
+        break;
+        case T_IF:
+        case T_WH:
+            freeast(((struct flow*)a)->cond);
+            freeast(((struct flow*)a)->body);
+            freeast(((struct flow*)a)->els);
+        break;
+        case T_FOREACH:
+            freeast(((struct foreach*)a)->var);
+            freeast(((struct foreach*)a)->coleccion);
+            freeast(((struct foreach*)a)->body);
+        break;
+        case T_ASIGN:
+            freeast(a->izq);
+            freeast(a->der);
+        break;
+        //freeast((struct ast*)(((struct symasgn*)a)->v)); //s pertenece a la Tabla de Símbolos.
+        break;
+        case LIST_ID:
+            if (((struct nomlist*)a)->nom_sym != NULL) {
+             free(((struct nomlist*)a)->nom_sym);
+            }
+            freeast((struct ast*)((struct nomlist*)a)->next);
+        break;
+        case ID_REF:
+            if (((struct symref*)a)->nameref != NULL) {
+                free(((struct symref*)a)->nameref); 
+            }
+        break;
+        case T_FNCALL:
+            if (((struct ufncall*)a)->namechar != NULL) {
+             free(((struct ufncall*)a)->namechar);
+            }
+            freeast(((struct ufncall*)a)->list_arg);
+            // No liberar namechar aquí si es un string literal.
+        break;
+        default: //Union Inter Diff first last add + - set list tipoRaiz
+            freeast(a->izq);
+            freeast(a->der);
+        break;
     }
-    }
+    free(a);
+ }
 
 
 /*FUNCION QUE HACE HASHING

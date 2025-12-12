@@ -50,6 +50,7 @@ program:  {
            printf("\n>");
           } 
 |body    {rta=eval($1); print_symbol_tables();
+        freeast($1);
                /* if(rta){
                         printf("\n>>"); 
                         printData(rta);     
@@ -58,6 +59,7 @@ program:  {
                 //treefree($2);
                 //freeAST($2);
                 dataFree(&rta);*/
+        
                 }
 
                 ;
