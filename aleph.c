@@ -685,11 +685,13 @@ tData eval( struct ast* a){
             break;
             }
             case T_WH:
-            nodo=newNodo(1);
+            nodo=newNodo(T_ELEM);
             tData aux4=eval(((struct flow *)a)->cond);            /* a default value */
             if( ((struct flow *)a)->body) {
                 if(aux4->nodeType==T_BOOL)
                 while( aux4->bool != 0){//evaluate the condition
+                    dataFree(&aux4);
+                    dataFree(&nodo);
                     nodo= eval(((struct flow *)a)->body);
                     aux4=eval(((struct flow *)a)->cond);
                 }          
@@ -704,25 +706,37 @@ tData eval( struct ast* a){
             }
             tData copia_coleccion= copyData(coleccion);
             enter_scope();
-            struct symbol* loop_var= add_symbol_to_current_scope(((struct symref *)((struct foreach *)a)->var)->nameref);
            // struct symref *loop_var =(struct symref *)newref(var->nom);     //((struct symref *)((struct foreach *)a)->var);
             if (((struct symref *)((struct foreach *)a)->var)->nodeType != ID_REF) {
              yyerror("La variable del bucle debe ser un identificador.");
+                exit_scope();
+                dataFree(&coleccion);
+                dataFree(&copia_coleccion);
+                nodo = newNodo(T_ELEM);
                 return NULL;
             }
-            tData current_elem;
+            struct symbol* loop_var= add_symbol_to_current_scope(((struct symref *)((struct foreach *)a)->var)->nameref);
+            nodo=newNodo(T_ELEM);
             // Itera sobre la colección
             while (copia_coleccion != NULL) {
-            current_elem = copia_coleccion->data;
+            tData next_node= copia_coleccion->next;
+            dataFree(&(loop_var->valor));  // Libera el elemento anterior
+            loop_var->valor = copia_coleccion->data;
             // Asigna el valor del elemento actual a la variable
-            loop_var->valor = current_elem; //en teoria tendria impacto global
+               //en teoria tendria impacto global
+
             // Ejecuta el cuerpo del bucle
+            dataFree(&nodo);
             nodo=eval(((struct foreach*)a)->body);
             // Pasa al siguiente elemento
-            copia_coleccion = copia_coleccion->next;
+            copia_coleccion->next = NULL;
+            dataFree(&copia_coleccion);
+            copia_coleccion = next_node;
             }
             exit_scope();
              // El foreach no retorna un valor
+            dataFree(&coleccion);
+            nodo=newNodo(T_ELEM);
         } break;
             case ID_REF:{
                 nodo=inicializar();
