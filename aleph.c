@@ -317,6 +317,7 @@ tData eval_stmt(struct ast *a, struct ast *b){
     if (b != NULL) {
         // Si hay más, llamamos recursivamente a eval_stmt para el resto de la lista.
         // Asegúrate de que este llamado no intente acceder a un puntero nulo.
+        if (nodo != NULL) dataFree(&nodo);  //liberar los nodos que no son los ultimos
         return eval_stmt(b->izq, b->der);
     } else {
         // Si no hay más sentencias, devolvemos el resultado de la última evaluación.
@@ -777,8 +778,10 @@ tData eval( struct ast* a){
             yyerror("Tipo de nodo desconocido");
             return NULL;
             break;
-
+        
         }
+    freeast(aux1);
+    freeast(aux2);
     return nodo;
     }
     return RETURN_VAL;
@@ -846,6 +849,7 @@ void freeast(struct ast *a){
             freeast(a->der);
         break;
     }
+    
     free(a);
  }
 
