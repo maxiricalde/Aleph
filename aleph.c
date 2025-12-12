@@ -27,7 +27,7 @@ if(!a) {
  exit(0);
  }
  a->nodeType = T_ELEM;
- a->atom =strdup(cad);
+ a->atom = cad;
  return (struct ast *)a;
 }
 
@@ -192,6 +192,7 @@ print_symbol_tables();
 }*/
 tData eval_calluser(char*sp, tData actual_args) {
     tData result = NULL;
+    tData valor_retorno = NULL;
     // 1. Entrar en un nuevo ámbito para la llamada a la función.
     enter_scope();
     struct symbol* s= find_symbol_in_scopes(sp);
@@ -210,7 +211,7 @@ tData eval_calluser(char*sp, tData actual_args) {
         struct symbol *local_sym = add_symbol_to_current_scope(param_name);        
         if (local_sym) {
             // Asignar el valor del argumento real a la nueva variable local.
-            local_sym->valor = current_arg->data;
+            local_sym->valor = copyData(current_arg->data);
             local_sym->tipo = current_arg->data->nodeType;
         } else {
             // Manejar error si la creación del símbolo falla.
@@ -221,22 +222,22 @@ tData eval_calluser(char*sp, tData actual_args) {
         formal_param_names = formal_param_names->next;
         current_arg = current_arg->next;
     }
+    
     // 3. Evaluar el cuerpo de la función.
     if (s->func_body != NULL) {
         // La evaluación ahora usará las variables locales recién creadas.
         result = eval(s->func_body);
         if(RETURN_STATE==1){
-            result=RETURN_VAL;
-            s->valor=copyData(result);
+            valor_retorno=copyData(RETURN_VAL);
         }else
-            s->valor=newNodo(1);
+            s->valor=newNodo(T_ELEM);
     } else {
         result = newNodo(T_ELEM);  //sirve?
     }
     // 4. Salir del ámbito de la función.
     exit_scope();
     RETURN_STATE=0; 
-    return ((tData)s->valor);
+    return (valor_retorno);
     }
     else return 0;   
 }
@@ -739,7 +740,6 @@ tData eval( struct ast* a){
             nodo=newNodo(T_ELEM);
         } break;
             case ID_REF:{
-                nodo=inicializar();
                 struct symbol*s =lookupp(((struct symref*)a)->nameref);
                 nodo=copyData(s->valor);
             break;  
