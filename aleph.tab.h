@@ -106,7 +106,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "aleph.y"
+#line 16 "aleph.y"
 
         struct ast *t;
         char* c;

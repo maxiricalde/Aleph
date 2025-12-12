@@ -7,6 +7,7 @@
 extern int yylex();
 extern void yyrestart();
 extern FILE * yyin;
+extern int yylex_destroy(void);
 tData rta;
 
 %}
@@ -51,14 +52,14 @@ program:  {
           } 
 |body    {rta=eval($1); print_symbol_tables();
         freeast($1);
-          /* if(rta){
+           if(rta){
                         printf("\n>>"); 
                         printData(rta);     
                 }
                 //printf("\n>");
                 //treefree($2);
                 //freeAST($2);
-                dataFree(&rta);*/
+                dataFree(&rta);
         
                 }
 
@@ -173,6 +174,7 @@ if(argc<2){ // leemos de stdin
         
         yyparse();
         exit_scope();
+        yylex_destroy();
         return 0; //corto aca
 }
 for(int i=1; i<argc;i++){
@@ -191,6 +193,7 @@ for(int i=1; i<argc;i++){
         exit_scope();
         fclose(f);    
 }
+yylex_destroy();
 return 0;
 }
 extern int yylineno;
