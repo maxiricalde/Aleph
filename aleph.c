@@ -387,7 +387,8 @@ int comparar(int tipo, struct ast* izq,struct ast* der){
 tData eval( struct ast* a){
     //tData nodo=malloc(sizeof(struct dataType));
     tData nodo=NULL;
-    tData aux1,aux2;
+    tData aux1=NULL;
+    tData aux2=NULL;
     if(RETURN_STATE!=1){        
   //  tData aux2=inicializar();
     //tData aux1=inicializar();
@@ -680,6 +681,7 @@ tData eval( struct ast* a){
                         nodo = newNodo(1);                /* a default value */
                         }
                     }
+            dataFree(&aux3);
             break;
             }
             case T_WH:
@@ -723,8 +725,9 @@ tData eval( struct ast* a){
              // El foreach no retorna un valor
         } break;
             case ID_REF:{
+                nodo=inicializar();
                 struct symbol*s =lookupp(((struct symref*)a)->nameref);
-                nodo=s->valor;
+                nodo=copyData(s->valor);
             break;  
             case T_FN:
             nodo=newNodo(1);
@@ -732,8 +735,11 @@ tData eval( struct ast* a){
             }
             case T_FNCALL: {
             tData aux5=eval(((struct ufncall*)a)->list_arg);
-            nodo=(eval_calluser(((struct ufncall*)a)->namechar,aux5));
-           
+            tData aux6=(eval_calluser(((struct ufncall*)a)->namechar,aux5));
+            nodo=copyData(aux6);                //Para no tocar los elementos de la tabla de simbolos
+            if (aux5 != NULL) {
+                dataFree(&aux5); //Los argumentos ya no se van a usar
+            }
             break;
             }
             case EXPR:
@@ -780,8 +786,8 @@ tData eval( struct ast* a){
             break;
         
         }
-    freeast(&aux1);
-    freeast(&aux2);
+    dataFree(&aux1);
+    dataFree(&aux2);
     return nodo;
     }
     return RETURN_VAL;
