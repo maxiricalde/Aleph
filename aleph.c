@@ -41,8 +41,8 @@ struct ast * newInt(int val) {
     }
     a->nodeType = T_INT;
     a->ivalor = val;
-    a->next = NULL; 
-    a->data = NULL;
+   // a->next = NULL; 
+   // a->data = NULL;
     return (struct ast *)a;
 }
 
@@ -54,8 +54,8 @@ struct ast* newBool(int val) {
     }
     a->nodeType = T_BOOL;
     a->bool= val;
-    a->next = NULL; 
-    a->data = NULL;
+   // a->next = NULL; 
+   // a->data = NULL;
     return (struct ast*)a;
 }
 
@@ -65,8 +65,8 @@ struct ast* newref(char* sym){   //no le asigna un espacio en tabla de simbolos
         yyerror("out ofspace");
         exit (0);
     }
-    a->nodeType=ID_REF;
-    a->nameref=sym;
+   // a->nodeType=ID_REF;
+   // a->nameref=sym;
     return (struct ast*)a;
 } 
 

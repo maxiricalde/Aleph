@@ -81,7 +81,11 @@ void dataFree(tData* d){
 	tData actual= *d;
 	tData sig;
 	while (actual != NULL) {
-		sig = actual->next;
+		if (actual->nodeType == T_LIST || actual->nodeType == T_SET) {
+            sig = actual->next; 
+        } else {
+            sig = NULL; // Los primitivos no tienen siguiente en esta estructura de union
+        }
 		switch(actual->nodeType){
 			case T_ELEM:
 				free(actual->atom);
