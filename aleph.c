@@ -326,7 +326,10 @@ tData eval_stmt(struct ast *a, struct ast *b){
         // Si el nodo es nulo, la lista está vacía, no hay nada que evaluar.
         return NULL;
     }
-
+    if (RETURN_STATE == 1) { //Si la sentencia anterior provocó un return, DETENER.
+        if (nodo != NULL) dataFree(&nodo);
+        return NULL; 
+    }
     // Luego, verificamos si hay más sentencias en la lista (el 'der')
     if (b != NULL) {
         // Si hay más, llamamos recursivamente a eval_stmt para el resto de la lista.
