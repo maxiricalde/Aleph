@@ -324,10 +324,10 @@ void PUSH(tData L, tData elem){ /*LISTO*/
 				aux->next=inicializar();
 				aux->next->nodeType=T_LIST;
 				aux->next->data=elem;
-
 			}else {
 				L->data=elem;
 			}
+			
 		}
 	}
 }

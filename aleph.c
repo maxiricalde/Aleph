@@ -537,11 +537,13 @@ tData eval( struct ast* a){
                     if(aux2->nodeType==T_LIST){
                         PUSH(aux2,aux1);
                         nodo=newNodo(T_ELEM);
+
                     }
                     else {
                         error=strdup("operando de tipo invalido");
                         nodo=newNodo(T_ELEM);
                     }
+                    aux1=NULL; //para que no haga free doble
             break; 
             case T_ADD:
               aux1=eval(a->der);
@@ -753,7 +755,9 @@ tData eval( struct ast* a){
             while (copia_coleccion != NULL) {
             tData next_node= copia_coleccion->next;
             dataFree(&(loop_var->valor));  // Libera el elemento anterior
-            loop_var->valor = copia_coleccion->data;
+            loop_var->valor = copyData(copia_coleccion->data); 
+            loop_var->tipo = loop_var->valor->nodeType;
+            //loop_var->valor = copia_coleccion->data;
             // Asigna el valor del elemento actual a la variable
                //en teoria tendria impacto global
 
