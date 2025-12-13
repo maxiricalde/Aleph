@@ -132,7 +132,12 @@ struct ast* dodef(struct symbol *name, struct ast *params, struct ast *stmts){
     }
     a->nodeType=ID_REF;
     a->s=name;
-    a->nameref=name->nom;
+    if (name->nom) {
+        a->nameref = strdup(name->nom); 
+    } else {
+        a->nameref = NULL;
+    }
+   // a->nameref=name->nom;
     a->s->valor=0;
 
     // Almacena el AST de la lista de parámetros directamente en el símbolo de la función
