@@ -909,7 +909,8 @@ tData INTER(tData A,tData B){
 			int esta=0;
 			esta=IN(A,B->data);
 			if(esta==1){
-				nuevo->data=B->data;
+				nuevo->data=copyData(B->data);
+				//nuevo->data=B->data;
 			}
 			B=B->next;
 			while(B!=NULL){
