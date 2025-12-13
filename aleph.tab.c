@@ -1349,7 +1349,7 @@ yyreduce:
         freeast((yyvsp[0].t));
            if(rta){
                         printf("\n>>"); 
-                        printData(rta);     
+                      //  printData(rta);     
                 }
                 //printf("\n>");
                 //treefree($2);

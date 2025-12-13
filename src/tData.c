@@ -886,7 +886,8 @@ tData UNION(tData A,tData B){
 						}
 						aux->next=inicializar();
 						aux->next->nodeType=T_SET;
-						aux->next->data=B->data;
+						aux->next->data=copyData(B->data);
+						//aux->next->data=B->data;
 					}
 					B=B->next;
 				}
@@ -921,7 +922,8 @@ tData INTER(tData A,tData B){
 					}
 					aux->next=inicializar();
 					aux->next->nodeType=T_SET;
-					aux->next->data=B->data;
+					aux->next->data=copyData(B->data);
+					//aux->next->data=B->data;
 				}
 				B=B->next;
 			}
@@ -957,7 +959,8 @@ tData DIFF(tData A,tData B){
 					esta=IN(B,aux->data);
 					if(esta==0){
 						nvo=newNodo(2);
-						nvo->data=aux->data;
+						nvo->data=copyData(aux->data);
+						//nvo->data=aux->data;
 						b=1;
 					}
 					aux=aux->next;

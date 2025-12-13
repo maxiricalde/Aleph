@@ -28,8 +28,8 @@ if(!a) {
  }
  a->nodeType = T_ELEM;
  a->atom = cad;
- a->next = NULL; 
- a->data = NULL;
+ //a->next = NULL; 
+ //a->data = NULL;
  return (struct ast *)a;
 }
 
@@ -65,8 +65,8 @@ struct ast* newref(char* sym){   //no le asigna un espacio en tabla de simbolos
         yyerror("out ofspace");
         exit (0);
     }
-   // a->nodeType=ID_REF;
-   // a->nameref=sym;
+    a->nodeType=ID_REF;
+    a->nameref=sym;
     return (struct ast*)a;
 } 
 
@@ -152,6 +152,7 @@ struct ast *newcall(char*s, struct ast *list_arg){
   a->nodeType =T_FNCALL;
   a->list_arg = list_arg;
   a->namechar = s;
+  a->nom = NULL;
   return (struct ast *)a;
 } //crea una llamada;
 tData eval_stmt(struct ast* izq ,struct ast* der);
@@ -543,9 +544,11 @@ tData eval( struct ast* a){
                     nodo=ADD_INI(aux2,&aux1);
                     if((a->der)->nodeType==ID_REF){
                         struct symbol* s=find_symbol_in_scopes(((struct symref*)(a->der))->nameref);
-                        s->valor=nodo;
+                        if(s->valor != NULL) dataFree(&(s->valor)); 
+                        s->valor = copyData(nodo);
+                      //  s->valor=nodo;
                     }
-                        
+                    aux1 = NULL;
                 }else{
                         error=strdup("tipo de operando distinto de conj o lista ");
                         nodo=newNodo(T_ELEM);

@@ -54,7 +54,7 @@ program:  {
         freeast($1);
            if(rta){
                         printf("\n>>"); 
-                        printData(rta);     
+                      //  printData(rta);     
                 }
                 //printf("\n>");
                 //treefree($2);
