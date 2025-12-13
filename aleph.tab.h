@@ -97,7 +97,8 @@ extern int yydebug;
     NUMBER = 298,                  /* NUMBER  */
     BOOL_T = 299,                  /* BOOL_T  */
     BOOL_F = 300,                  /* BOOL_F  */
-    EOFF = 301                     /* EOFF  */
+    EOFF = 301,                    /* EOFF  */
+    UMINUS = 302                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -115,7 +116,7 @@ union YYSTYPE
        // struct symlist *sl;
         struct nomlist *nl;
 
-#line 119 "aleph.tab.h"
+#line 120 "aleph.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

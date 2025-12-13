@@ -41,6 +41,7 @@ tData rta;
 %left OP_FIRST OP_LAST OP_SIZE OP_POP OP_GET
  %left '+' '-'
  %left '*' '/'
+%nonassoc UMINUS
 %start program
 %%
 
@@ -120,6 +121,7 @@ expr: ELEM              {$$=newElem($1);}  //no es este \"[a-zA-Z0-9]+\" {yylval
     | expr OP_ADD expr {$$=newast(T_ADD,$1,$3);}
     |list
     |set
+    | '-' expr %prec  UMINUS { $$ = newast('u', $2, NULL); }
     | expr '+' expr          { $$ = newast('+', $1,$3); }
     | expr '-' expr          { $$ = newast('-', $1,$3);}
     | expr '*' expr          { $$ = newast('*', $1,$3); }

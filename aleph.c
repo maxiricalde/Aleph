@@ -632,6 +632,18 @@ tData eval( struct ast* a){
                      nodo->ivalor = (aux1->ivalor / aux2->ivalor);
                  } 
             break;
+            case 'u':
+                nodo=inicializar();
+                aux1=eval(a->izq);
+             
+                if(aux1->nodeType==T_INT){
+                nodo->nodeType=T_INT;
+                nodo->ivalor=(-(aux1->ivalor));
+                }else{
+                yyerror("operando de tipo invalido para el menos unario");
+                nodo = newNodo(T_ELEM); 
+             }
+            break;
             case T_AND:
             aux1 = eval(a->izq);
             aux2 = eval(a->der);
