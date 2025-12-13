@@ -77,6 +77,7 @@ stmt: expr
 | while
 |for_each
 | DEF IDEN OPENPAR symlist CLOSEPAR OPENLL lista_stmt CLOSELL{$$=dodef(add_symbol_to_current_scope($2),$4,$7);
+                                                                free($2);
                                                                 printf("\nDefinida>");}
                                                                 
     //| asig_let  

@@ -28,6 +28,8 @@ if(!a) {
  }
  a->nodeType = T_ELEM;
  a->atom = cad;
+ a->next = NULL; 
+ a->data = NULL;
  return (struct ast *)a;
 }
 
@@ -39,6 +41,8 @@ struct ast * newInt(int val) {
     }
     a->nodeType = T_INT;
     a->ivalor = val;
+    a->next = NULL; 
+    a->data = NULL;
     return (struct ast *)a;
 }
 
@@ -50,6 +54,8 @@ struct ast* newBool(int val) {
     }
     a->nodeType = T_BOOL;
     a->bool= val;
+    a->next = NULL; 
+    a->data = NULL;
     return (struct ast*)a;
 }
 
@@ -230,14 +236,18 @@ tData eval_calluser(char*sp, tData actual_args) {
         if(RETURN_STATE==1){
             valor_retorno=copyData(RETURN_VAL);
         }else
+            valor_retorno=NULL;
             s->valor=newNodo(T_ELEM);
+        if (result != NULL) dataFree(&result);
     } else {
         result = newNodo(T_ELEM);  //sirve?
     }
     // 4. Salir del ámbito de la función.
+
     exit_scope();
     RETURN_STATE=0; 
     return (valor_retorno);
+
     }
     else return 0;   
 }
@@ -285,6 +295,9 @@ void eval_asign(struct ast *s, struct ast *v){ //a,b=1,2/
        
        // printf("cadena dentro eval asig: %s",((struct symbol*)aux)->nom);
         struct symbol* sp= lookupp(((struct nomlist*)s)->nom_sym);
+        if(sp->valor!=NULL){
+            dataFree(&(sp->valor));
+        }
         if(v->izq->nodeType==T_FNCALL){
              //struct symbol* auxsym= find_symbol_in_scopes(((struct symbol*)aux)->nom);
              //printf("cadena dentro eval asig: %s",((struct symbol*)aux)->nom );
@@ -443,6 +456,7 @@ tData eval( struct ast* a){
                 }
             break;
             case LIST_EXPR:  
+                    nodo=inicializar();
                     nodo->nodeType=tipoRaiz; 
                     nodo->data= eval(a->izq);
                     if(a->der){
@@ -597,7 +611,12 @@ tData eval( struct ast* a){
             aux1=eval(a->izq);
              aux2=eval(a->der);
              if(aux1->nodeType==T_INT && aux2->nodeType==T_INT)
-               nodo->ivalor=(aux1->ivalor / aux2->ivalor); 
+               if (aux2->ivalor == 0) {
+                     yyerror("Division por cero.");
+                     nodo->ivalor = 0;
+                 } else {
+                     nodo->ivalor = (aux1->ivalor / aux2->ivalor);
+                 } 
             break;
             case T_AND:
             aux1 = eval(a->izq);
@@ -764,7 +783,7 @@ tData eval( struct ast* a){
                 printf("\n");
                 if(a->izq->nodeType==ID_REF){
                     struct symbol*sp=find_symbol_in_scopes(((struct symref*)(a->izq))->nameref);//((struct symref*)(a->izq))->s->valor;
-                    nodo=sp->valor;
+                    nodo=copyData(sp->valor);
                     if(strcmp(error,"\0")==0)
                         printref((struct symref*)(a->izq));
                     else
