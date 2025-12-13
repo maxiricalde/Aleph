@@ -1,0 +1,42 @@
+/print("--- TEST 1: Asignacion Simple ---");
+A = {1, 2, 3};
+B = A; 
+/print(B);
+A = {4}; 
+/print(B);
+
+/print("--- TEST 2: Temporales de Conjuntos ---");
+S1 = {"a"};
+S2 = {"b"};
+S3 = (S1 /U S2) /U {"c"};
+/print(S3);
+/print("--- TEST 3: Retorno de Funciones ---");
+
+def crearConjunto(val) {
+    local = {val, "temp"};
+    return local; 
+};
+
+res = crearConjunto("test");
+/print(res);
+
+/print("--- TEST 4: Listas y Foreach ---");
+L = [10, 20];
+foreach i in L {
+    30 /push L;
+    x = /pop L; 
+    /print(x);
+};
+/print(L);
+
+/print("--- TEST 5: Recursividad ---");
+def factorial(n) {
+    if (n < 2) { 
+        return 1; 
+    };
+    return n * factorial(n - 1);
+};
+f = factorial(4);
+/print(f);
+
+/print("--- FIN DE PRUEBAS ---");

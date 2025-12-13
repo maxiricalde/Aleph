@@ -61,7 +61,7 @@
 "/in" {return BELONG;}
 "/include" {return SUBSET;}
 "/print" {return PRINT;}
-\"[a-zA-Z0-9]+\" {yylval.c=strdup(yytext); return ELEM;}
+\"[^\"\n]*\" {yylval.c=strdup(yytext); return ELEM;} 
 [a-zA-Z][a-zA-Z0-9_]* {yylval.c=strdup(yytext);return IDEN;} // yylval.c=strdup(yytext); return IDEN
 [0-9]+ {yylval.i=atoi(yytext); return NUMBER;}
 \n { yylineno++; }

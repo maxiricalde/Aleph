@@ -755,7 +755,7 @@ tData eval( struct ast* a){
             while (copia_coleccion != NULL) {
             tData next_node= copia_coleccion->next;
             dataFree(&(loop_var->valor));  // Libera el elemento anterior
-            loop_var->valor = copyData(copia_coleccion->data); 
+            loop_var->valor = copyData(copia_coleccion->data);   //para no liverar doble
             loop_var->tipo = loop_var->valor->nodeType;
             //loop_var->valor = copia_coleccion->data;
             // Asigna el valor del elemento actual a la variable

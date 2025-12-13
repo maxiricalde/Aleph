@@ -106,7 +106,7 @@ list_var: IDEN COMMA list_var           {$$=newast(LIST_ID,(struct ast*)lookupp(
 symlist: IDEN COMMA symlist             {$$=newNOML(LIST_ID,$1,(struct nomlist*)$3);}
         | IDEN                          {$$=newNOML(LIST_ID,$1,NULL);};
 
-expr: ELEM              {$$=newElem($1);}
+expr: ELEM              {$$=newElem($1);}  //no es este \"[a-zA-Z0-9]+\" {yylval.c=strdup(yytext); return ELEM;}
     | IDEN              {$$=newref($1);}
     | NUMBER            {$$=newInt($1);}
     |BOOL_F             {$$=newBool(0);}
