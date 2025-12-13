@@ -236,9 +236,10 @@ tData eval_calluser(char*sp, tData actual_args) {
         result = eval(s->func_body);
         if(RETURN_STATE==1){
             valor_retorno=copyData(RETURN_VAL);
+            dataFree(&RETURN_VAL); // return val tiene que tener su propio espacio para llamadas recursivas
         }else
             valor_retorno=NULL;
-            s->valor=newNodo(T_ELEM);
+           // s->valor=newNodo(T_ELEM);
         if (result != NULL) dataFree(&result);
     } else {
         result = newNodo(T_ELEM);  //sirve?
@@ -775,7 +776,8 @@ tData eval( struct ast* a){
             case T_FNCALL: {
             tData aux5=eval(((struct ufncall*)a)->list_arg);
             tData aux6=(eval_calluser(((struct ufncall*)a)->namechar,aux5));
-            nodo=copyData(aux6);                //Para no tocar los elementos de la tabla de simbolos
+            nodo=aux6;
+           // nodo=copyData(aux6);                //Para no tocar los elementos de la tabla de simbolos
             if (aux5 != NULL) {
                 dataFree(&aux5); //Los argumentos ya no se van a usar
             }
@@ -815,7 +817,8 @@ tData eval( struct ast* a){
             break;
             case T_RETURN:
                 nodo=eval(a->izq);
-                RETURN_VAL=nodo;
+                dataFree(&RETURN_VAL);
+                RETURN_VAL=copyData(nodo); // return val tiene que tener su propio espacio para llamadas recursivas
                 RETURN_STATE=1;
                 return nodo;
             break;
